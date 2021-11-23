@@ -1,0 +1,14 @@
+awk '$3 == "gene"' TAIR10_GFF3_genes.gff  > T10_genes_only.gff
+
+awk '$3 == "mRNA"' TAIR10_GFF3_genes.gff  > T10_mRNA_only.gff
+
+awk '$3 == "gene"' TAIR10_GFF3_genes.gff  | grep "protein_coding_gene" > T10_pcgenes_only.gff
+
+
+awk 'BEGIN{OFS="\t";FS="\t"} {if ($7 == "+") print substr($1,4),$4-1000,$4,$9,".",$7; else print substr($1,4),$5,$5+1000,$9,".",$7}' T10_mRNA_only.gff | awk '($1 != "M") && ($1 != "C")' | bedtools getfasta -s -fi TAIR10_chr_all.fas -bed - -fo T10_GmRNA_only.fa
+
+awk 'BEGIN{OFS="\t";FS="\t"} {if ($7 == "+") print substr($1,4),$4-1000,$4,$9,".",$7; else print substr($1,4),$5,$5+1000,$9,".",$7}' T10_genes_only.gff | awk '($1 != "M") && ($1 != "C")' | bedtools getfasta -s -fi TAIR10_chr_all.fas -bed - -fo T10_Ggenes_only.fa
+
+awk 'BEGIN{OFS="\t";FS="\t"} {if ($7 == "+") print substr($1,4),$4-1000,$4,$9,".",$7; else print substr($1,4),$5,$5+1000,$9,".",$7}' T10_pcgenes_only.gff | awk '($1 != "M") && ($1 != "C")' | bedtools getfasta -s -fi TAIR10_chr_all.fas -bed - -fo T10_Gpcgenes_only.fa
+
+
